@@ -231,6 +231,9 @@ MonoBehaviour:
   frameOffset: {x: 0, y: 1}
   target: {fileID: 1791477691}
   followDistance: 5
+  cameraAvoidMask:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1 &467460644
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,9 +422,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 811ad1d042468b544a5e320bfbb8cba9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gravity: 9.8
   moveSpeed: 28.8
-  jumpStrength: 34.2
-  velocityDampening: 0.9
+  jumpHeight: 2
   characterController: {fileID: 1791477692}
   playerCamera: {fileID: 202559503}
   groundCheck: {fileID: 1611699468}

@@ -9,6 +9,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Vector2 frameOffset = new(0, 1);
     [SerializeField] private Transform target;
     [SerializeField] private float followDistance = 5;
+    [SerializeField] private LayerMask cameraAvoidMask;
 
     private float rotationX;
     private float rotationY;
@@ -30,8 +31,15 @@ public class CameraController : MonoBehaviour
         Quaternion targetRotation = Quaternion.Euler(rotationX, rotationY, 0);
         Vector3 focusPosition = target.position + new Vector3(frameOffset.x, frameOffset.y);
 
-        Vector3 offsetVector = focusPosition - targetRotation * new Vector3(0, 0, followDistance);
+        float resultDistance = followDistance;
 
+        if (Physics.Raycast(target.position, targetRotation * Vector3.back, out RaycastHit info, followDistance, cameraAvoidMask, QueryTriggerInteraction.Ignore))
+        {
+            resultDistance = info.distance;
+        }
+
+        Vector3 offsetVector = focusPosition - targetRotation * new Vector3(0, 0, resultDistance);
+        
         transform.SetPositionAndRotation(offsetVector, targetRotation);
     }
 }
