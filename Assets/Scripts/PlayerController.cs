@@ -6,8 +6,9 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
-    public float moveSpeed = 6;
-    public float jumpStrength = 18;
+    public Vector3 gravity = new(0, -10, 0);
+    public float moveSpeed = 34;
+    public float jumpStrength = 28;
     public float velocityDampening = 0.8f;
 
     [SerializeField] private CharacterController characterController;
@@ -30,7 +31,7 @@ public class PlayerController : MonoBehaviour
     {
         velocity *= velocityDampening;
 
-        isGrounded = Physics.CheckSphere(groundCheck.position, 0.1f, groundCheckMask);
+        isGrounded = Physics.CheckSphere(groundCheck.position, 0.5f, groundCheckMask);
         Debug.Log(isGrounded);
         if (isGrounded && velocity.y < 0)
         {
@@ -46,10 +47,10 @@ public class PlayerController : MonoBehaviour
             float moveAngle = playerCamera.eulerAngles.y + Mathf.Rad2Deg * (float)Math.Atan2(direction.x, direction.z);
             Vector3 moveDirection = Quaternion.Euler(0f, moveAngle, 0f) * Vector3.forward;
 
-            velocity += moveSpeed * moveDirection.normalized;
+            velocity += moveSpeed * Time.deltaTime * moveDirection.normalized;
         }
 
-        velocity += Physics.gravity;
+        velocity += gravity * Time.deltaTime;
 
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
