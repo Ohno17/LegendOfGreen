@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
         velocity *= velocityDampening;
 
         isGrounded = Physics.CheckSphere(groundCheck.position, 0.1f, groundCheckMask);
+        Debug.Log(isGrounded);
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -1;
@@ -56,5 +57,6 @@ public class PlayerController : MonoBehaviour
         }
         
         characterController.Move(velocity * Time.deltaTime);
+        Debug.DrawRay(gameObject.transform.position, velocity);
     }
 }
