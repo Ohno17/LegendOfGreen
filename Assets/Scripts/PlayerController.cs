@@ -7,9 +7,9 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
-    public float gravity = -9.8f;
-    public float moveSpeed = 12f;
-    public float jumpHeight = 3f;
+    public float gravity = 9.8f;
+    public float moveSpeed = 8f;
+    public float jumpHeight = 2f;
 
     [SerializeField] private CharacterController characterController;
     [SerializeField] private Transform playerCamera;
@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        isGrounded = Physics.CheckSphere(groundCheck.position, 0.4f, groundCheckMask);
+        isGrounded = Physics.CheckSphere(groundCheck.position, 0.3f, groundCheckMask);
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
@@ -47,11 +47,11 @@ public class PlayerController : MonoBehaviour
             characterController.Move(moveSpeed * Time.deltaTime * moveDirection.normalized);
         }
 
-        velocity.y += gravity * Time.deltaTime;
+        velocity.y -= gravity * Time.deltaTime;
 
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            velocity.y = Mathf.Sqrt(-2 * gravity * jumpHeight);
+            velocity.y = Mathf.Sqrt(2 * gravity * jumpHeight);
         }
         
         characterController.Move(velocity * Time.deltaTime);
