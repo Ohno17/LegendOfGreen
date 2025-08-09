@@ -1,15 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
 
-    public Vector3 gravity = new(0, -10, 0);
-    public float moveSpeed = 34;
-    public float jumpStrength = 28;
-    public float velocityDampening = 0.8f;
+    public float gravity = -9.8f;
+    public float moveSpeed = 12f;
+    public float jumpHeight = 3f;
 
     [SerializeField] private CharacterController characterController;
     [SerializeField] private Transform playerCamera;
@@ -29,13 +29,10 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        velocity *= velocityDampening;
-
-        isGrounded = Physics.CheckSphere(groundCheck.position, 0.5f, groundCheckMask);
-        Debug.Log(isGrounded);
+        isGrounded = Physics.CheckSphere(groundCheck.position, 0.4f, groundCheckMask);
         if (isGrounded && velocity.y < 0)
         {
-            velocity.y = -1;
+            velocity.y = -2f;
         }
 
         float horizontal = Input.GetAxisRaw("Horizontal");
@@ -47,17 +44,16 @@ public class PlayerController : MonoBehaviour
             float moveAngle = playerCamera.eulerAngles.y + Mathf.Rad2Deg * (float)Math.Atan2(direction.x, direction.z);
             Vector3 moveDirection = Quaternion.Euler(0f, moveAngle, 0f) * Vector3.forward;
 
-            velocity += moveSpeed * Time.deltaTime * moveDirection.normalized;
+            characterController.Move(moveSpeed * Time.deltaTime * moveDirection.normalized);
         }
 
-        velocity += gravity * Time.deltaTime;
+        velocity.y += gravity * Time.deltaTime;
 
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
-            velocity.y = Mathf.Sqrt(-2 * Physics.gravity.y * jumpStrength);
+            velocity.y = Mathf.Sqrt(-2 * gravity * jumpHeight);
         }
         
         characterController.Move(velocity * Time.deltaTime);
-        Debug.DrawRay(gameObject.transform.position, velocity);
     }
 }
